@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from __future__ import unicode_literals
 
 import yaml
@@ -259,6 +261,22 @@ class Pascal(Quest):
         return self.message.format(self.category)
 
 
+class JP(Quest):
+
+    category = 'jp'
+
+    def filter_logs(self):
+        stamp = datetime(2014, 10, 23, 11, 18, 0)
+        for person, logs in self.group_by_person(self.dao.all_logs()):
+            if person == 'Jean-Philippe Gélinas':
+                filtered = [l for l in logs if l['timestamp'] >= stamp]
+                if len(filtered) > 0:
+                    yield filtered[0]
+
+    def format_message(self, log):
+        return self.message.format(self.category)
+
+
 class Message(object):
 
     def __init__(self, filepath):
@@ -291,6 +309,7 @@ def setup(message_filepath):
         Mac(dao, message),
         Chat(dao, message),
         Pascal(dao, message),
+        JP(dao, message),
     )
     quest_manager = QuestManager(quests)
     return quest_manager
