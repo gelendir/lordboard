@@ -191,7 +191,7 @@ class Speedy(Quest):
 
 class FiveMinuteSpeedy(Speedy):
 
-    nb_tests = 10
+    nb_tests = 15
     seconds = 300
 
 
