@@ -67,8 +67,8 @@ def add_announce():
         if key not in request.forms:
             abort(400, 'missing parameter: {}'.format(key))
 
-    announce = {'announcement': request.forms['announcement'],
-                'category': request.forms['category']}
+    announce = {'announcement': request.forms['announcement'].decode('utf8'),
+                'category': request.forms['category'].decode('utf8')}
 
     if 'timestamp' in request.forms:
         try:
