@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 import yaml
 import itertools
 from testlink import dao
-from datetime import timedelta
+from datetime import timedelta, datetime
 
 
 DT_FORMAT = "%Y-%m-%dT%H:%M:%S"
@@ -243,6 +243,22 @@ class Chat(SingleTest):
     number = 155
 
 
+class Pascal(Quest):
+
+    category = 'pascal'
+
+    def filter_logs(self):
+        stamp = datetime(2014, 10, 23, 10, 10, 0)
+        for person, logs in self.group_by_person(self.dao.all_logs()):
+            if person == 'Pascal Cadotte Michaud':
+                filtered = [l for l in logs if l['timestamp'] >= stamp]
+                if len(filtered) > 0:
+                    yield filtered[0]
+
+    def format_message(self, log):
+        return self.message.format(self.category)
+
+
 class Message(object):
 
     def __init__(self, filepath):
@@ -274,6 +290,7 @@ def setup(message_filepath):
         Windows(dao, message),
         Mac(dao, message),
         Chat(dao, message),
+        Pascal(dao, message),
     )
     quest_manager = QuestManager(quests)
     return quest_manager
