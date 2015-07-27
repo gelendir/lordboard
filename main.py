@@ -2,9 +2,10 @@
 from __future__ import unicode_literals
 import os.path
 import json
+import executions
 
 import config
-from datetime import datetime
+from datetime import datetime, date, time
 
 from testlink import dao, report
 from testlink import setup as setup_testlink
@@ -53,6 +54,22 @@ def log_journal():
         log['timestamp'] = log['timestamp'].strftime(DATETIME_FORMAT)
 
     return {'logs': logs}
+
+
+@route('/executions/conflicts')
+def execution_conflicts():
+    start = datetime.combine(date.today(), time(0, 0, 0))
+    delta = config.CONFLICT_DELTA
+    if 'start' in request.query:
+        start = datetime.strptime(request.query['start'], DATETIME_FORMAT)
+
+    with open(config.HTTP_LOG) as f:
+        conflicts = tuple(executions.find_conflicts(f, start, delta))
+
+    return {version: tuple({'ip': l.ip,
+                            'timestamp': l.timestamp.strftime(DATETIME_FORMAT)}
+                           for l in (left, right))
+            for version, left, right in conflicts}
 
 
 @hook('before_request')
