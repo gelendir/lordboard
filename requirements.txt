@@ -1,2 +1,2 @@
-bottle
+aiohttp
 git+git://github.com/gelendir/pytestlink

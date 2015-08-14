@@ -5,7 +5,7 @@ var drawMatrix = null;
 var REFRESH_TIMEOUT = 10000;
 
 function refresh() {
-    $.getJSON('/dashboard.json', function(data) {
+    $.getJSON('/dashboard', function(data) {
         $('.version').html(data.version);
 
         fillStats(data.stats)
